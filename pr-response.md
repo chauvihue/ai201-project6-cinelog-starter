@@ -6,14 +6,20 @@
 ## Comment 1 — Rename
 **Reviewer's comment:** `save_to_watchlist()` doesn't follow the project's `verb_to_noun` naming convention. Should be renamed to `add_to_watchlist()` to match `add_to_collection()`.
 
-**What I did:** changed the name of the function as described; references found in `routes/watchlist/watchlist.py` in the `add_film()` function
-**How I verified:** I ran tests
+**What I did:** Renamed `save_to_watchlist()` to `add_to_watchlist()` in `services/watchlist_service.py` (line 12). Updated the import statement in `routes/watchlist/watchlist.py` (line 8) and the function call in the `add_film()` endpoint (line 32).
+
+**How I verified:**
+1. Searched entire codebase for remaining references to `save_to_watchlist` using `grep -r "save_to_watchlist"`, found 0 code references (only appears in this PR response doc)
+2. Verified all references to `add_to_watchlist` are correct in `routes/watchlist/watchlist.py` (import and usage)
 
 ## Comment 2 — Deduplication
 **Reviewer's comment:** The function doesn't handle duplicate entries. If a user adds the same film twice to their watchlist, it creates duplicate database records instead of raising an error.
 
-**What I did:** added a depulication logic in `add_to_watchlist()` in `services/watchlist_service.py` by a test query of the WatchlistEntry database.
+**What I did:** Added deduplication logic in `add_to_watchlist()` in `services/watchlist_service.py` (lines 20-25). Created a new `AlreadyInWatchlistError` exception class (lines 12-14). The function now queries for existing entries before creating a new one and raises the exception if a duplicate is found.
+
 **How I verified:**
+1. Verified that attempting to add a duplicate film raises `AlreadyInWatchlistError` exception
+2. Confirmed database contains only 1 entry after duplicate attempt (verified with `WatchlistEntry.query.filter_by().count()`)
 
 ## Comment 3 — Missing test
 **Reviewer's comment:** Need to add a test case for when `film_id` doesn't exist in the database. The pattern is in `test_collection.py`.
