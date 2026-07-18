@@ -24,8 +24,8 @@
 ## Comment 3 — Missing test
 **Reviewer's comment:** Need to add a test case for when `film_id` doesn't exist in the database. The pattern is in `test_collection.py`.
 
-**What I did:**
-**How I verified:**
+**What I did:** added `test_add_to_watchlist_nonexistent_film_raises()` in `tests/test_watchlist.py` to test if error raised when add nonexistent film
+**How I verified:** I ran the test and it passed!
 
 ## Comment 4 — Default visibility
 **Reviewer's comment:** Watchlists default to `public=True`. Need to document the reasoning for this decision — we should be intentional about default visibility, not just inherit a default.
